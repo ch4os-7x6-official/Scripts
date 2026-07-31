@@ -1,0 +1,16 @@
+pcall(function()
+    if getrawmetatable and setreadonly and newcclosure and getnamecallmethod then
+        local plr = game.Players.LocalPlayer
+        local mt = getrawmetatable(game)
+        local oldNC = mt.__namecall
+        setreadonly(mt, false)
+        mt.__namecall = newcclosure(function(self, ...)
+            if getnamecallmethod() == "Kick" and self == plr then
+                warn("[Anti-Kick] Blocked kick!")
+                return
+            end
+            return oldNC(self, ...)
+        end)
+        setreadonly(mt, true)
+    end
+end)
